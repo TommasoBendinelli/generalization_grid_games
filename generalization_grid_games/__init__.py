@@ -1,7 +1,7 @@
 from gym.envs.registration import register
 
 
-for i in range(20):
+for i in range(30):
     register(
         id='TwoPileNim{}-v0'.format(i),
         entry_point='generalization_grid_games.envs:TwoPileNimGymEnv{}'.format(i),
@@ -29,6 +29,13 @@ for i in range(20):
     register(
         id='ReachForTheStar{}-v0'.format(i),
         entry_point='generalization_grid_games.envs:ReachForTheStarGymEnv{}'.format(i),
+    )
+
+
+for i in range(3):
+    register(
+        id='PlayingWithXYZ{}-v0'.format(i),
+        entry_point='generalization_grid_games.env:PlayingWithXYZGymEnv{}'.format(i),
     )
 
 

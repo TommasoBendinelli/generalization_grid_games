@@ -1,5 +1,6 @@
 import numpy as np
 import os
+from PIL import Image
 
 def get_asset_path(asset_name):
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -32,3 +33,7 @@ def run_random_agent_demo(env_cls, outdir=None, max_num_steps=10):
 
     env.close()
 
+def changeResolution(input,output,res = (200,200)):
+    im = Image.open(input)
+    im = im.resize(res, Image.ANTIALIAS)
+    im.save(output,dpi = (300,300))

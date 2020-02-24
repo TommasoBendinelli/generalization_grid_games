@@ -7,6 +7,7 @@ import imageio
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.widgets import TextBox
 
 
 class InvalidState(Exception):
@@ -213,6 +214,82 @@ class TwoPlayerGeneralizationGridGame(GeneralizationGridGame):
             self.render_onscreen()
         
         return (next_layout.copy(), next_player), reward, done, {}
+
+class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
+    fig_scale = 0.5
+
+    def __init__(self, layout, interactive=False, record_video=False, video_out_path='out.mp4'):
+        layout = np.array(layout, dtype=object)
+
+        self.initial_layout = layout.copy()
+        self.current_layout = layout.copy()
+
+        self.interactive = interactive
+
+        if record_video:
+            self.start_recording_video(video_out_path)
+        else:
+            self.record_video = False
+        
+        height, width = layout.shape
+        self.width, self.height = width, height
+
+        self.observation_space = spaces.MultiDiscrete(self.num_tokens * np.ones((height, width)))
+        self.action_space = spaces.MultiDiscrete([self.height, self.width])
+
+        if interactive:
+            self.action_lock = False
+
+            # Create the figure and axes
+            self.fig, self.ax, self.textbox = self.initialize_figure(height, width)
+            self.drawings = []
+            self.render_onscreen()
+            self.current_text_value = None
+
+            # Create event hook for mouse clicks
+            self.fig.canvas.mpl_connect('button_press_event', self.button_press)
+
+            plt.show()
+
+    @classmethod
+    def initialize_figure(cls, height, width):
+        fig = plt.figure(figsize=((width + 2) * cls.fig_scale , (height) * cls.fig_scale + 2 ))
+        ax = fig.add_axes((0.05, 0.1, 0.9, 0.9),
+                                    aspect='equal', frameon=False,
+                                    xlim=(-0.05, width + 0.05),
+                                    ylim=(-0.05, height + 0.05))
+        axbox = fig.add_axes([0.1, 0.02, 0.8, 0.075], xlim=(-0.05, width + 0.05),
+                                    ylim=(height + 0.05, height + 0.10))
+
+        text_box = TextBox(axbox,"", initial="Click and then insert X, Y, Z ")
+        for axis in (ax.xaxis, ax.yaxis):
+            axis.set_major_formatter(plt.NullFormatter())
+            axis.set_major_locator(plt.NullLocator())
+
+        return fig, ax, text_box
+
+        
+
+
+
+
+    def button_press(self, event):
+        if self.action_lock:
+            return
+        if (event.xdata is None) or (event.ydata is None):
+            return
+        i, j = map(int, (event.xdata, event.ydata))
+    
+        if (i < 0 or j < 0 or i >= self.width or j >= self.height):
+            return
+        
+
+        self.action_lock = True
+        c, r = i, self.height - 1 - j
+        if event.button == 1:
+            self.step((r, c))
+        self.fig.canvas.draw()
+        self.action_lock = False
 
 
 

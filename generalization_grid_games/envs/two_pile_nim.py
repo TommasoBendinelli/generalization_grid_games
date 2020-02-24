@@ -150,10 +150,10 @@ TwoPileNim = VersusComputerTwoPlayerGeneralizationGridGameFactory("TwoPileNim", 
 
 ### Specific environments
 rng = np.random.RandomState(0)
-num_layouts = 20
+num_layouts = 30
 
 def create_random_layout():
-    height = rng.randint(2, 20)
+    height = rng.randint(3, 20)
     left_column_height = rng.randint(1, height)
     while True:
         right_column_height = rng.randint(1, height)
