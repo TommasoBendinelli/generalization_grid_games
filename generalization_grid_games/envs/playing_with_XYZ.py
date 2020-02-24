@@ -33,30 +33,32 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
     num_tokens = len(ALL_TOKENS)
     hand_icon = HAND_ICON_IMAGE
 
-    @staticmethod
-    def transition(layout, action):
-
+    def transition(self,layout, action):
         r, c = action
         height, width = layout.shape
         new_layout = layout.copy()
         token = layout[r, c]
-        new_layout = layout.copy()
-        if token == EMPTY:
-            return PlayingWithXYZ.add(new_layout,token,r, c)
-        if token == PASS:
-            return new_layout
-        if token == X:
-            return playing_with_XYZ.add(new_layout, token, r, c)
-        if token == Y:
-            return playing_with_XYZ.add(new_layout, token, r, c)
-        if token == Z: 
-            return playing_with_XYZ.add(new_layout, token, r, c)
+        cval = self.current_text_value
+        if cval == X or cval == Y or cval == Z:
+            return PlayingWithXYZ.add(new_layout,cval,r, c)
+        else: return new_layout
+        # if token == EMPTY:
+        #     return PlayingWithXYZ.add(new_layout,token,r, c)
+        # if token == PASS:
+        #     return new_layout
+        # if token == X:
+        #     return playing_with_XYZ.add(new_layout, token, r, c)
+        # if token == Y:
+        #     return playing_with_XYZ.add(new_layout, token, r, c)
+        # if token == Z: 
+        #     return playing_with_XYZ.add(new_layout, token, r, c)
 
         #if token == UP_ARROW:
 
     @staticmethod
     def add(layout, token, r, c):
-        layout[r,c] == token
+        layout[r,c] = token
+        return layout
 
     @staticmethod
     def compute_reward(state0, action, state1):
@@ -96,8 +98,6 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
 
             ax.add_artist(box)
 
-
-
     def initialize_figure(cls, height, width):
         fig, ax, textbox = PlayingXYZGeneralizationGridGame.initialize_figure(height, width)
 
@@ -118,34 +118,14 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
         return fig, ax, textbox
 
 
-    def button_press(self, event):
-        if self.action_lock:
-            return
-        if (event.xdata is None) or (event.ydata is None):
-            return
-        i, j = map(int, (event.xdata, event.ydata))
-    
-        if (i < 0 or j < 0 or i >= self.width or j >= self.height):
-            return
-
-        self.action_lock = True
-        c, r = i, self.height - 1 - j
-        if event.button == 1:
-            print(self.current_text_value)
-            self.step((r, c))
-        self.fig.canvas.draw()
-        self.action_lock = False
-    
-    def value(self,text):
-        self.currentvalue = text
 
 
 
 rng = np.random.RandomState()
 num_layouts = 3
 def create_random_layout():
-    height = rng.randint(2,20)
-    width = rng.randint(2,20)
+    height = rng.randint(2,4)
+    width = rng.randint(2,4)
     layout = np.full((height,width), EMPTY, dtype=object)
     return layout
 

@@ -248,8 +248,13 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
 
             # Create event hook for mouse clicks
             self.fig.canvas.mpl_connect('button_press_event', self.button_press)
+            
+            # Create event for keyboard
+            self.textbox.on_submit(self.submit)
 
             plt.show()
+
+
 
     @classmethod
     def initialize_figure(cls, height, width):
@@ -261,17 +266,24 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
         axbox = fig.add_axes([0.1, 0.02, 0.8, 0.075], xlim=(-0.05, width + 0.05),
                                     ylim=(height + 0.05, height + 0.10))
 
-        text_box = TextBox(axbox,"", initial="Click and then insert X, Y, Z ")
+        text_box = TextBox(axbox,"", initial="Insert x, y, z ")
         for axis in (ax.xaxis, ax.yaxis):
             axis.set_major_formatter(plt.NullFormatter())
             axis.set_major_locator(plt.NullLocator())
 
         return fig, ax, text_box
 
-        
+    @staticmethod
+    def compute_reward(layout0, action, layout1):
+        return 0 
+    
+    @staticmethod
+    def compute_done(layout):
+        return 0
+   
 
-
-
+    def submit(self, text_at_submit):
+        self.current_text_value = str.split(text_at_submit)[0]
 
     def button_press(self, event):
         if self.action_lock:
@@ -282,14 +294,34 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
     
         if (i < 0 or j < 0 or i >= self.width or j >= self.height):
             return
-        
 
         self.action_lock = True
         c, r = i, self.height - 1 - j
         if event.button == 1:
+            print(self.current_text_value)
             self.step((r, c))
         self.fig.canvas.draw()
         self.action_lock = False
+
+
+
+    # def button_press(self, event):
+    #     if self.action_lock:
+    #         return
+    #     if (event.xdata is None) or (event.ydata is None):
+    #         return
+    #     i, j = map(int, (event.xdata, event.ydata))
+    
+    #     if (i < 0 or j < 0 or i >= self.width or j >= self.height):
+    #         return
+        
+
+    #     self.action_lock = True
+    #     c, r = i, self.height - 1 - j
+    #     if event.button == 1:
+    #         self.step((r, c))
+    #     self.fig.canvas.draw()
+    #     self.action_lock = False
 
 
 

@@ -3,3 +3,4 @@ __pycache__
 *.egg-info
 *.pyc
 .vscode/
+generalization_grid_games/envs/Untitled.code-workspace
