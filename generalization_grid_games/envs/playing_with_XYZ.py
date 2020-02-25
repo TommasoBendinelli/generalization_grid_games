@@ -136,9 +136,9 @@ E = EMPTY
 #Training
 layout0 = [
     [E, E, E, E],
-    [X, E, E, E],
-    [Y, E, E, E],
-    [Z, E, E, E]
+    [E, X, E, E],
+    [E, Y, E, E],
+    [E, Z, E, E]
 ]
 
 layout1 = [
