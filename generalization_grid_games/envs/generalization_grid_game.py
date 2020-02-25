@@ -283,7 +283,10 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
    
 
     def submit(self, text_at_submit):
-        self.current_text_value = str.split(text_at_submit)[0]
+        if str.split(text_at_submit) and str.split(text_at_submit)[0] in ('xyz'):
+            self.current_text_value = str.split(text_at_submit)[0]
+        else: self.current_text_value = None 
+
 
     def button_press(self, event):
         if self.action_lock:

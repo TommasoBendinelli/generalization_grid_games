@@ -123,11 +123,45 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
 
 rng = np.random.RandomState()
 num_layouts = 3
-def create_random_layout():
-    height = rng.randint(2,4)
-    width = rng.randint(2,4)
-    layout = np.full((height,width), EMPTY, dtype=object)
-    return layout
+# def create_random_layout():
+#     height = rng.randint(2,4)
+#     width = rng.randint(2,4)
+#     layout = np.full((height,width), EMPTY, dtype=object)
+#     return layout
 
-layouts = [create_random_layout() for _ in range(num_layouts)]
+#layouts = [create_random_layout() for _ in range(num_layouts)]
+#create_gym_envs(PlayingWithXYZ, layouts, globals())
+
+E = EMPTY
+#Training
+layout0 = [
+    [E, E, E, E],
+    [X, E, E, E],
+    [Y, E, E, E],
+    [Z, E, E, E]
+]
+
+layout1 = [
+    [E, E, E, E],
+    [E, X, E, E],
+    [E, Y, E, E], 
+    [E, E, E, E]
+]
+
+layout2 = [
+    [E, E, E, E],
+    [E, X, E, E],
+    [E, E, E, E], 
+    [E, Z, E, E]
+]
+
+#Testing
+layout3 = [
+    [E, E, E, E], 
+    [E, E, E, E],
+    [E, Y, E, E],
+    [E, Z, E, E] 
+]
+
+layouts = [layout0,layout1,layout2,layout3]
 create_gym_envs(PlayingWithXYZ, layouts, globals())
