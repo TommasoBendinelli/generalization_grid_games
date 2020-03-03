@@ -12,8 +12,10 @@ X = 'x'
 Y = 'y'
 Z = 'z'
 PASS = 'pass'
+ALL_TOKENS = [EMPTY, X, Y, Z, PASS]
+ALL_ACTION_TOKENS = [X, Y, Z, PASS]
 
-#Fix image resolution
+#Change image resolution
 for image in os.listdir(get_asset_path('raw/')):
     if image == ".DS_Store":
         continue
@@ -34,11 +36,12 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
     hand_icon = HAND_ICON_IMAGE
 
     def transition(self,layout, action):
-        r, c = action
+        cval, pos  = action #i.e. (x, (3,1))
+        r, c = pos 
         height, width = layout.shape
         new_layout = layout.copy()
         token = layout[r, c]
-        cval = self.current_text_value
+        #cval = self.current_text_value
         if cval == X or cval == Y or cval == Z:
             return PlayingWithXYZ.add(new_layout,cval,r, c)
         else: return new_layout
@@ -61,8 +64,10 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
         return layout
 
     @staticmethod
-    def compute_reward(state0, action, state1):
-        return 0.
+    def compute_reward(state0, action, state1): 
+        if np.array_equal(state0,layout0) and action[0] == PASS:
+            return 1 
+        return 0   
 
     @classmethod
     def draw_token(cls, token, r, c, ax, height, width, token_scale=1.0):

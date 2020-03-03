@@ -275,7 +275,7 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
 
     @staticmethod
     def compute_reward(layout0, action, layout1):
-        return 0 
+        return 
     
     @staticmethod
     def compute_done(layout):
