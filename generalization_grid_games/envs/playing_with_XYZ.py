@@ -35,6 +35,7 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
     num_tokens = len(ALL_TOKENS)
     hand_icon = HAND_ICON_IMAGE
 
+
     def transition(self,layout, action):
         cval, pos  = action #i.e. (x, (3,1))
         r, c = pos 
@@ -103,24 +104,24 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
 
             ax.add_artist(box)
 
-    def initialize_figure(cls, height, width):
-        fig, ax, textbox = PlayingXYZGeneralizationGridGame.initialize_figure(height, width)
+    # def initialize_figure(cls, height, width):
+    #     fig, ax, textbox = PlayingXYZGeneralizationGridGame.initialize_figure(height, width)
 
-        # Draw a white grid in the background
-        for r in range(height):
-            for c in range(width):
-                edge_color = '#888888'
-                face_color = 'white'
+    #     # Draw a white grid in the background
+    #     for r in range(height):
+    #         for c in range(width):
+    #             edge_color = '#888888'
+    #             face_color = 'white'
                 
-                drawing = RegularPolygon((c + 0.5, (height - 1 - r) + 0.5),
-                                             numVertices=4,
-                                             radius=0.5 * np.sqrt(2),
-                                             orientation=np.pi / 4,
-                                             ec=edge_color,
-                                             fc=face_color)
-                ax.add_patch(drawing)
+    #             drawing = RegularPolygon((c + 0.5, (height - 1 - r) + 0.5),
+    #                                          numVertices=4,
+    #                                          radius=0.5 * np.sqrt(2),
+    #                                          orientation=np.pi / 4,
+    #                                          ec=edge_color,
+    #                                          fc=face_color)
+    #             ax.add_patch(drawing)
 
-        return fig, ax, textbox
+    #     return fig, ax, textbox
 
 
 

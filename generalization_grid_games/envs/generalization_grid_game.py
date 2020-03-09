@@ -8,6 +8,8 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import TextBox
+#import asyncio
+
 
 
 class InvalidState(Exception):
@@ -19,7 +21,7 @@ class GeneralizationGridGame(gym.Env):
     fig_scale = 1.
 
     def __init__(self, layout, interactive=False, record_video=False, video_out_path='out.mp4'):
-        layout = np.array(layout, dtype=object)
+        self.layout = np.array(layout, dtype=object)
 
         self.initial_layout = layout.copy()
         self.current_layout = layout.copy()
@@ -31,11 +33,11 @@ class GeneralizationGridGame(gym.Env):
         else:
             self.record_video = False
         
-        height, width = layout.shape
+        height, width = self.layout.shape
         self.width, self.height = width, height
 
         self.observation_space = spaces.MultiDiscrete(self.num_tokens * np.ones((height, width)))
-        self.action_space = spaces.MultiDiscrete([self.height, self.width])
+        self._space = spaces.MultiDiscrete([self.height, self.width])
 
         if interactive:
             self.action_lock = False
@@ -225,7 +227,8 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
         self.current_layout = layout.copy()
 
         self.interactive = interactive
-
+        self.action = []
+        self.layout_demo = []
         if record_video:
             self.start_recording_video(video_out_path)
         else:
@@ -236,7 +239,7 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
 
         self.observation_space = spaces.MultiDiscrete(self.num_tokens * np.ones((height, width)))
         self.action_space = spaces.MultiDiscrete([self.height, self.width])
-
+        self.counter = 0
         if interactive:
             self.action_lock = False
 
@@ -247,12 +250,16 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
             self.current_text_value = None
 
             # Create event hook for mouse clicks
-            self.fig.canvas.mpl_connect('button_press_event', self.button_press)
+            self.fig.canvas.mpl_connect('pick_event', self.button_press)
             
             # Create event for keyboard
             self.textbox.on_submit(self.submit)
 
+            print("Initial Step")
             plt.show()
+
+    
+            
 
 
 
@@ -263,9 +270,12 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
                                     aspect='equal', frameon=False,
                                     xlim=(-0.05, width + 0.05),
                                     ylim=(-0.05, height + 0.05))
+        ax.set_picker(True)
+        ax.name = "Grid"
         axbox = fig.add_axes([0.1, 0.02, 0.8, 0.075], xlim=(-0.05, width + 0.05),
                                     ylim=(height + 0.05, height + 0.10))
-
+        axbox.set_picker(True)
+        axbox.name = "TextBox"
         text_box = TextBox(axbox,"", initial="Insert x, y, z ")
         for axis in (ax.xaxis, ax.yaxis):
             axis.set_major_formatter(plt.NullFormatter())
@@ -283,28 +293,34 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
    
 
     def submit(self, text_at_submit):
-        if str.split(text_at_submit) and str.split(text_at_submit)[0] in ('xyz'):
+        if str.split(text_at_submit) and (str.split(text_at_submit)[0] in ('xyz') or text_at_submit.strip() == "pass"):
             self.current_text_value = str.split(text_at_submit)[0]
         else: self.current_text_value = None 
 
-
     def button_press(self, event):
-        if self.action_lock:
-            return
-        if (event.xdata is None) or (event.ydata is None):
-            return
-        i, j = map(int, (event.xdata, event.ydata))
-    
-        if (i < 0 or j < 0 or i >= self.width or j >= self.height):
-            return
+        if event.artist.name == "Grid" and self.current_text_value != None:
+            event = event.mouseevent
+            if self.action_lock:
+                return
+            if (event.xdata is None) or (event.ydata is None):
+                return
+            i, j = map(int, (event.xdata, event.ydata))
+        
+            if (i < 0 or j < 0 or i >= self.width or j >= self.height):
+                return
 
-        self.action_lock = True
-        c, r = i, self.height - 1 - j
-        if event.button == 1:
-            print(self.current_text_value)
-            self.step((r, c))
-        self.fig.canvas.draw()
-        self.action_lock = False
+            self.action_lock = True
+            c, r = i, self.height - 1 - j
+            if event.button == 1:
+                self.action.append((self.current_text_value,(r, c)))
+                self.layout_demo.append(self.current_layout.copy()) 
+                print("Step {} recorded".format(self.counter))
+                self.counter += 1
+                self.step((self.current_text_value,(r, c)))
+            #self.fig.canvas.draw()
+            self.action_lock = False
+        else: 
+            return
 
 
 
