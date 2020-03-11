@@ -32,7 +32,7 @@ for i in range(20):
     )
 
 
-for i in range(4):
+for i in range(6):
     register(
         id='PlayingWithXYZ{}-v0'.format(i),
         entry_point='generalization_grid_games.envs:PlayingWithXYZGymEnv{}'.format(i),

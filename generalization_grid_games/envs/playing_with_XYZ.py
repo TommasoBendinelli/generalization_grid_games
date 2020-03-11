@@ -11,8 +11,9 @@ EMPTY = 'empty'
 X = 'x'
 Y = 'y'
 Z = 'z'
+START = 's'
 PASS = 'pass'
-ALL_TOKENS = [EMPTY, X, Y, Z, PASS]
+ALL_TOKENS = [EMPTY, X, Y, Z, PASS, START]
 ALL_ACTION_TOKENS = [X, Y, Z, PASS]
 
 #Change image resolution
@@ -22,11 +23,12 @@ for image in os.listdir(get_asset_path('raw/')):
     path = get_asset_path('raw/'+image)
     changeResolution(path,get_asset_path('') + image)
 
-ALL_TOKENS = [EMPTY, X, Y, Z, PASS]
+#ALL_TOKENS = [EMPTY, X, Y, Z, PASS]
 TOKEN_IMAGES = {
     X: plt.imread(get_asset_path('x.png')),
     Y: plt.imread(get_asset_path('y.png')),
-    Z: plt.imread(get_asset_path('z.png'))
+    Z: plt.imread(get_asset_path('z.png')),
+    START: plt.imread(get_asset_path('start.jpg')),
 }
 
 HAND_ICON_IMAGE = plt.imread(get_asset_path('hand_icon.png'))
@@ -139,35 +141,62 @@ num_layouts = 3
 #create_gym_envs(PlayingWithXYZ, layouts, globals())
 
 E = EMPTY
+S = START
 #Training
 layout0 = [
-    [E, E, E, E],
-    [E, X, E, E],
-    [E, Y, E, E],
-    [E, Z, E, E]
+    [E, E, E, E, E],
+    [S, E, E, E, E],
+    [E, E, E, E, E],
+    [E, E, E, E, E],
 ]
 
 layout1 = [
+    [E, E, S, E],
     [E, E, E, E],
-    [E, X, E, E],
-    [E, Y, E, E], 
+    [E, E, E, E], 
     [E, E, E, E]
 ]
 
 layout2 = [
     [E, E, E, E],
-    [E, X, E, E],
+    [E, S, E, E],
     [E, E, E, E], 
-    [E, Z, E, E]
+    [E, E, E, E]
 ]
+
+# layout3 = [
+#     [E, E, X, E],
+#     [E, E, Y, E],
+#     [E, E, Z, E], 
+#     [E, E, E, E]
+# ]
 
 #Testing
 layout3 = [
-    [E, E, E, E], 
+    [S, E, E, E], 
     [E, E, E, E],
-    [E, Y, E, E],
-    [E, Z, E, E] 
+    [E, E, E, E],
+    [E, E, E, E] 
 ]
 
-layouts = [layout0,layout1,layout2,layout3]
+layout4 = [
+    [E, E, E, E, E], 
+    [E, E, E, E, E],
+    [E, E, E, E, E],
+    [E, S, E, E, E],
+    [E, E, E, E, E],
+
+]
+
+layout5 = [
+    [E, E, E, E, E], 
+    [E, E, E, E, E],
+    [E, E, E, E, E],
+    [E, E, E, S, E],
+    [E, E, E, E, E],
+
+]
+
+
+layouts = [layout0,layout1,layout2, layout3, layout4, layout5]
 create_gym_envs(PlayingWithXYZ, layouts, globals())

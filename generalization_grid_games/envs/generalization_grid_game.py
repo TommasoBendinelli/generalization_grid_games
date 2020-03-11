@@ -258,10 +258,38 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
             print("Initial Step")
             plt.show()
 
+    def step(self, action):
+        self.last_action = action
+
+        next_layout = self.transition(self.current_layout, action)
+        reward = self.compute_reward(self.current_layout, action, next_layout)
+        done = self.compute_done(next_layout)
+        self.current_layout = next_layout
+        
+        if self.record_video:
+            for i in range(4):
+                self.recorded_video_frames.append(self.render())
+        if self.interactive:
+            self.render_onscreen()
+        
+        return next_layout.copy(), reward, done, {}
     
-            
+    ### Main stateful methods
+    def reset(self):
+        self.current_layout = self.initial_layout.copy()
 
+        self.last_action = None
 
+        if self.record_video:
+            for i in range(2):
+                self.recorded_video_frames.append(self.render())
+        if self.interactive:
+            self.render_onscreen()
+
+        return self.current_layout.copy()
+    
+    def render(self):
+        return self.get_image(self.current_layout, self.last_action)
 
     @classmethod
     def initialize_figure(cls, height, width):
@@ -290,6 +318,36 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
     @staticmethod
     def compute_done(layout):
         return 0
+
+    ### Helper stateless methods
+    @classmethod
+    def get_image(cls, observation, action, mode='human', close=False):
+        height, width = observation.shape
+
+        fig, ax, useless = cls.initialize_figure(height, width)
+
+        for r in range(height):
+            for c in range(width):
+                token = observation[r, c]
+                cls.draw_token(token, r, c, ax, height, width)
+
+        # if action is not None:
+        #     cls.draw_action(action, ax, height, width)
+
+        im = fig2data(fig)
+        plt.close(fig)
+
+        return im
+
+    @classmethod
+    def draw_action(cls, action, ax, height, width):
+        r, c = action
+        if not (isinstance(r, int) or isinstance(r, np.int8) or isinstance(r, np.int64)):
+            r -= 0.5
+            c -= 0.5
+        oi = OffsetImage(cls.hand_icon, zoom = 0.3 * cls.fig_scale * (2.5 / max(height, width)**0.5))
+        box = AnnotationBbox(oi, (c + 0.5, (height - 1 - r) + 0.5), frameon=False)
+        ax.add_artist(box)
    
 
     def submit(self, text_at_submit):
