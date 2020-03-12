@@ -21,7 +21,7 @@ class GeneralizationGridGame(gym.Env):
     fig_scale = 1.
 
     def __init__(self, layout, interactive=False, record_video=False, video_out_path='out.mp4'):
-        self.layout = np.array(layout, dtype=object)
+        layout = np.array(layout, dtype=object)
 
         self.initial_layout = layout.copy()
         self.current_layout = layout.copy()
@@ -33,7 +33,7 @@ class GeneralizationGridGame(gym.Env):
         else:
             self.record_video = False
         
-        height, width = self.layout.shape
+        height, width = layout.shape
         self.width, self.height = width, height
 
         self.observation_space = spaces.MultiDiscrete(self.num_tokens * np.ones((height, width)))
@@ -217,11 +217,11 @@ class TwoPlayerGeneralizationGridGame(GeneralizationGridGame):
         
         return (next_layout.copy(), next_player), reward, done, {}
 
-class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
+class PlayingXYZGeneralizationGridGame(TwoPlayerGeneralizationGridGame):
     fig_scale = 0.5
 
     def __init__(self, layout, interactive=False, record_video=False, video_out_path='out.mp4'):
-        layout = np.array(layout, dtype=object)
+        self.layout = np.array(layout, dtype=object)
 
         self.initial_layout = layout.copy()
         self.current_layout = layout.copy()
@@ -243,7 +243,7 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
         if interactive:
             self.action_lock = False
 
-            # Create the figure and axes
+            # # Create the figure and axes
             self.fig, self.ax, self.textbox = self.initialize_figure(height, width)
             self.drawings = []
             self.render_onscreen()
@@ -304,7 +304,7 @@ class PlayingXYZGeneralizationGridGame(GeneralizationGridGame):
                                     ylim=(height + 0.05, height + 0.10))
         axbox.set_picker(True)
         axbox.name = "TextBox"
-        text_box = TextBox(axbox,"", initial="Insert x, y, z ")
+        text_box = TextBox(axbox,"", initial=" ")
         for axis in (ax.xaxis, ax.yaxis):
             axis.set_major_formatter(plt.NullFormatter())
             axis.set_major_locator(plt.NullLocator())

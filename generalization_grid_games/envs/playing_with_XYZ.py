@@ -198,5 +198,5 @@ layout5 = [
 ]
 
 
-layouts = [layout0,layout1,layout2, layout3, layout4, layout5]
+layouts = [np.array(x) for x in [layout0,layout1,layout2, layout3, layout4, layout5]]
 create_gym_envs(PlayingWithXYZ, layouts, globals())
