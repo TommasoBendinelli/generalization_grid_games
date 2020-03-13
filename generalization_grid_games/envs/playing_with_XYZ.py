@@ -1,4 +1,5 @@
-from .generalization_grid_game import PlayingXYZGeneralizationGridGame, create_gym_envs
+from .generalization_grid_game import create_gym_envs
+from generalization_grid_games.envs.playingXYZGeneralizationGridGame import PlayingXYZGeneralizationGridGame
 from .utils import get_asset_path, changeResolution
 
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
@@ -14,7 +15,7 @@ Z = 'z'
 START = 's'
 PASS = 'pass'
 ALL_TOKENS = [EMPTY, X, Y, Z, PASS, START]
-ALL_ACTION_TOKENS = [X, Y, Z, PASS]
+ALL_ACTION_TOKENS = [X, Y, Z, PASS, EMPTY]
 
 #Change image resolution
 for image in os.listdir(get_asset_path('raw/')):
@@ -45,7 +46,7 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
         new_layout = layout.copy()
         token = layout[r, c]
         #cval = self.current_text_value
-        if cval == X or cval == Y or cval == Z:
+        if cval in ALL_ACTION_TOKENS:
             return PlayingWithXYZ.add(new_layout,cval,r, c)
         else: return new_layout
         # if token == EMPTY:
@@ -144,10 +145,8 @@ E = EMPTY
 S = START
 #Training
 layout0 = [
-    [E, E, E, E, E],
-    [S, E, E, E, E],
-    [E, E, E, E, E],
-    [E, E, E, E, E],
+    [E, E],
+    [S, X]
 ]
 
 layout1 = [

@@ -288,8 +288,10 @@ class PlayingXYZGeneralizationGridGame(TwoPlayerGeneralizationGridGame):
 
         return self.current_layout.copy()
     
-    def render(self):
-        return self.get_image(self.current_layout, self.last_action)
+    def render_onscreen(self):
+        #if self.last_actio
+        #self.fig, self.ax = initialize_figure(self.height, self.width)
+        return self.get_image(self.current_layout)
 
     @classmethod
     def initialize_figure(cls, height, width):
@@ -321,7 +323,7 @@ class PlayingXYZGeneralizationGridGame(TwoPlayerGeneralizationGridGame):
 
     ### Helper stateless methods
     @classmethod
-    def get_image(cls, observation, action, mode='human', close=False):
+    def get_image(cls, observation, mode='human', close=False):
         height, width = observation.shape
 
         fig, ax, useless = cls.initialize_figure(height, width)
@@ -356,27 +358,52 @@ class PlayingXYZGeneralizationGridGame(TwoPlayerGeneralizationGridGame):
         else: self.current_text_value = None 
 
     def button_press(self, event):
-        if event.artist.name == "Grid" and self.current_text_value != None:
-            event = event.mouseevent
-            if self.action_lock:
-                return
-            if (event.xdata is None) or (event.ydata is None):
-                return
-            i, j = map(int, (event.xdata, event.ydata))
-        
-            if (i < 0 or j < 0 or i >= self.width or j >= self.height):
-                return
+        if event.artist.name == "Grid" and event.mouseevent.button==1 : #Mouse Left
+            if self.current_text_value != None and event.mouseevent.key != 'd':
+                event = event.mouseevent
+                if self.action_lock:
+                    return
+                if (event.xdata is None) or (event.ydata is None):
+                    return
+                i, j = map(int, (event.xdata, event.ydata))
+            
+                if (i < 0 or j < 0 or i >= self.width or j >= self.height):
+                    return
 
-            self.action_lock = True
-            c, r = i, self.height - 1 - j
-            if event.button == 1:
-                self.action.append((self.current_text_value,(r, c)))
-                self.layout_demo.append(self.current_layout.copy()) 
-                print("Step {} recorded".format(self.counter))
-                self.counter += 1
-                self.step((self.current_text_value,(r, c)))
-            #self.fig.canvas.draw()
-            self.action_lock = False
+                self.action_lock = True
+                c, r = i, self.height - 1 - j
+                if event.button == 1:
+                    self.action.append((self.current_text_value,(r, c)))
+                    self.layout_demo.append(self.current_layout.copy()) 
+                    print("Step {} recorded".format(self.counter))
+                    self.counter += 1
+                    self.step((self.current_text_value,(r, c)))
+                #self.fig.canvas.draw()
+                self.action_lock = False
+            elif event.mouseevent.key == 'd': #Delete element
+                event = event.mouseevent
+                if self.action_lock:
+                    return
+                if (event.xdata is None) or (event.ydata is None):
+                    return
+                i, j = map(int, (event.xdata, event.ydata))
+            
+                if (i < 0 or j < 0 or i >= self.width or j >= self.height):
+                    return
+
+                self.action_lock = True
+                c, r = i, self.height - 1 - j
+                if event.button == 1:
+                    self.action.append((self.current_text_value,(r, c)))
+                    self.layout_demo.append(self.current_layout.copy()) 
+                    print("Step {} recorded".format(self.counter))
+                    self.counter += 1
+                    self.step(('empty',(r, c)))
+                self.action_lock = False
+            else: 
+                return
+        elif event.artist.name == "Grid" and event.mouseevent.button == 3: #Mouse Right
+            pass
         else: 
             return
 
