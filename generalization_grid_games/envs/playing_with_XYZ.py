@@ -106,6 +106,7 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
             box = AnnotationBbox(oi, (c + 0.5, (height - 1 - r) + 0.5), frameon=False)
 
             ax.add_artist(box)
+            return box
 
     # def initialize_figure(cls, height, width):
     #     fig, ax, textbox = PlayingXYZGeneralizationGridGame.initialize_figure(height, width)
@@ -145,8 +146,9 @@ E = EMPTY
 S = START
 #Training
 layout0 = [
-    [E, E],
-    [S, X]
+    [E, E, E],
+    [S, E, E],
+    [E, E, E]
 ]
 
 layout1 = [

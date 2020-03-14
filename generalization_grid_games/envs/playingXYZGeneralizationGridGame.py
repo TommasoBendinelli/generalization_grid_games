@@ -1,4 +1,14 @@
 from generalization_grid_games.envs import TwoPlayerGeneralizationGridGame
+from .utils import fig2data
+
+from gym import spaces
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import gym
+import imageio
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.widgets import TextBox
 
 class PlayingXYZGeneralizationGridGame(TwoPlayerGeneralizationGridGame):
     fig_scale = 0.5
@@ -71,7 +81,7 @@ class PlayingXYZGeneralizationGridGame(TwoPlayerGeneralizationGridGame):
 
         return self.current_layout.copy()
     
-    def render_onscreen(self):
+    def render(self):
         #if self.last_actio
         #self.fig, self.ax = initialize_figure(self.height, self.width)
         return self.get_image(self.current_layout)
