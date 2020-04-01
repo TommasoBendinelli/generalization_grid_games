@@ -18,18 +18,18 @@ ALL_TOKENS = [EMPTY, X, Y, Z, PASS, START]
 ALL_ACTION_TOKENS = [X, Y, Z, PASS, EMPTY]
 
 #Change image resolution
-for image in os.listdir(get_asset_path('raw/')):
-    if image == ".DS_Store":
-        continue
-    path = get_asset_path('raw/'+image)
-    changeResolution(path,get_asset_path('') + image)
+# for image in os.listdir(get_asset_path('raw/')):
+#     if image == ".DS_Store":
+#         continue
+#     path = get_asset_path('raw/'+image)
+#     changeResolution(path,get_asset_path('') + image)
 
 #ALL_TOKENS = [EMPTY, X, Y, Z, PASS]
 TOKEN_IMAGES = {
     X: plt.imread(get_asset_path('x.png')),
     Y: plt.imread(get_asset_path('y.png')),
     Z: plt.imread(get_asset_path('z.png')),
-    START: plt.imread(get_asset_path('start.jpg')),
+    START: plt.imread(get_asset_path('start.png')),
 }
 
 HAND_ICON_IMAGE = plt.imread(get_asset_path('hand_icon.png'))
@@ -64,7 +64,8 @@ class PlayingWithXYZ(PlayingXYZGeneralizationGridGame):
 
     @staticmethod
     def add(layout, token, r, c):
-        layout[r,c] = token
+        if token != "pass":
+            layout[r,c] = token
         return layout
 
     @staticmethod
@@ -146,24 +147,25 @@ E = EMPTY
 S = START
 #Training
 layout0 = [
-    [E, E, E],
-    [S, E, E],
-    [E, E, E]
+    [X, X, E, E],
+    [S, X, E, E],
+    [X, X, E, E]
 ]
 
 layout1 = [
-    [E, E, S, E],
-    [E, E, E, E],
+    [E, X, S, E],
+    [E, E, X, E],
     [E, E, E, E], 
     [E, E, E, E]
 ]
 
 layout2 = [
-    [E, E, E, E],
-    [E, S, E, E],
-    [E, E, E, E], 
+    [X, X, E, E],
+    [X, S, E, E],
+    [X, X, X, E], 
     [E, E, E, E]
 ]
+
 
 # layout3 = [
 #     [E, E, X, E],
@@ -179,18 +181,15 @@ layout3 = [
     [E, E, E, E],
     [E, E, E, E] 
 ]
-
 layout4 = [
-    [E, E, E, E, E], 
     [E, E, E, E, E],
-    [E, E, E, E, E],
-    [E, S, E, E, E],
+    [E, X, X, E, E],
+    [E, X, S, E, E],
     [E, E, E, E, E],
 
 ]
 
 layout5 = [
-    [E, E, E, E, E], 
     [E, E, E, E, E],
     [E, E, E, E, E],
     [E, E, E, S, E],

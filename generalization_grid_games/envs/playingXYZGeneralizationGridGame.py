@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import TextBox
 
 class PlayingXYZGeneralizationGridGame(TwoPlayerGeneralizationGridGame):
-    fig_scale = 0.5
+    fig_scale = 1
 
     def __init__(self, layout, interactive=False, record_video=False, video_out_path='out.mp4'):
         self.layout = np.array(layout, dtype=object)
@@ -187,7 +187,7 @@ class PlayingXYZGeneralizationGridGame(TwoPlayerGeneralizationGridGame):
                 self.action_lock = True
                 c, r = i, self.height - 1 - j
                 if event.button == 1:
-                    self.action.append((self.current_text_value,(r, c)))
+                    self.action.append(('empty',(r, c)))
                     self.layout_demo.append(self.current_layout.copy()) 
                     print("Step {} recorded".format(self.counter))
                     self.counter += 1
