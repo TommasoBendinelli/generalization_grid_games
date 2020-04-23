@@ -147,12 +147,13 @@ E = EMPTY
 S = START
 #Training
 layout0 = [
-    [X, X, E, E],
-    [S, X, E, E],
-    [X, X, E, E]
+    [E, X, X, E, E],
+    [E, S, X, E, E],
+    [E, X, X, E, E]
 ]
 
 layout1 = [
+    [E, E, X, E],
     [E, X, S, E],
     [E, E, X, E],
     [E, E, E, E], 
@@ -160,10 +161,14 @@ layout1 = [
 ]
 
 layout2 = [
-    [X, X, E, E],
-    [X, S, E, E],
-    [X, X, X, E], 
-    [E, E, E, E]
+    [E, E, E, E, E, E, E, E, E],
+    [E, E, E, E, E, E, E, E, E],
+    [E, E, E, E, E, E, E, E, E],
+    [E, X, X, E, E, E, E, E, E],
+    [E, X, S, E, E, E, E, E, E],
+    [E, X, X, X, E, E, E, E, E], 
+    [E, E, E, E, E, E, E, E, E],
+    [E, E, E, E, E, E, E, E, E],
 ]
 
 
