@@ -38,4 +38,10 @@ for i in range(6):
         entry_point='generalization_grid_games.envs:PlayingWithXYZGymEnv{}'.format(i),
     )
 
+for i in range(3):
+    register(
+        id='UnityGame{}-v0'.format(i),
+        entry_point='generalization_grid_games.envs:UnityGameGymEnv{}'.format(i),
+    )
+
 
