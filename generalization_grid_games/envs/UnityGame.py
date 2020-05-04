@@ -82,15 +82,15 @@ class UnityGame(PlayingXYZGeneralizationGridGame):
         height, width = layout.shape
         new_layout = layout.copy()
         #token = layout[r, c]
-        pick_state = np.argwhere((layout == P_Clicked) | (layout == S_CLicked))
-        if len(pick_state) >= 1:
-            if len(pick_state) > 1:
-                print("ERROR: More than two objects picked at the same time")
-            selected_piece = pick_state[0] 
-            # if layout[tuple(selected_piece[0])] == P_Clicked:
-            #     selected_piece = P
-            # elif layout[tuple(selected_piece[0])] == S_CLicked:
-            #     selected_piece = S
+        pick_state_flag = False
+        for possible_picks in PICKED_UP:
+            pick_state = np.argwhere(layout == possible_picks)
+            if len(pick_state) >= 1:
+                if len(pick_state) > 1 or pick_state_flag == True:
+                    print("ERROR: More than two objects picked at the same time")
+                selected_piece = pick_state[0] 
+                pick_state_flag = True
+        if pick_state_flag == True:
             return self.add(new_layout,r,c,selected_piece)
         else:
             return self.add(new_layout, r, c,None)
@@ -115,6 +115,20 @@ class UnityGame(PlayingXYZGeneralizationGridGame):
         returnfrom[P] = P_Clicked
         returnfrom[S_CLicked] = S
         returnfrom[S] = S_CLicked
+        returnfrom[CUBE_BLACK_Clicked] = CUBE_BLACK
+        returnfrom[CUBE_BLACK] = CUBE_BLACK_Clicked
+        returnfrom[CUBE_YELLOW_Clicked] = CUBE_YELLOW
+        returnfrom[CUBE_YELLOW] = CUBE_YELLOW_Clicked
+        returnfrom[CUBE_GREEN_Clicked] = CUBE_GREEN
+        returnfrom[CUBE_GREEN] = CUBE_GREEN_Clicked
+        returnfrom[CUBE_BROWN_Clicked] = CUBE_BROWN
+        returnfrom[CUBE_BROWN] = CUBE_BROWN_Clicked
+        returnfrom[CUBE_GREY_Clicked] = CUBE_GREY
+        returnfrom[CUBE_GREY] = CUBE_GREY_Clicked
+        returnfrom[CUBE_PINK_Clicked] = CUBE_PINK
+        returnfrom[CUBE_PINK] = CUBE_PINK_Clicked
+        returnfrom[CUBE_BLUE_Clicked] = CUBE_BLUE
+        returnfrom[CUBE_BLUE] = CUBE_BLUE_Clicked
         return returnfrom
 
     def add(self,layout, r, c, pick_obj = None):
@@ -279,6 +293,7 @@ class UnityGame(PlayingXYZGeneralizationGridGame):
 # ]
 
 names = ["layer1.json","layer2.json"]
+names = ["MultipleObJTest1.json", "MultipleObJTest2.json"]
 #names.remove("matrix.json")
 # if ".DS_Store" in names:
 #     names.remove(".DS_Store")
