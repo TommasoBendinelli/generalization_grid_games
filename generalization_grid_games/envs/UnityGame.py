@@ -292,7 +292,9 @@ class UnityGame(PlayingXYZGeneralizationGridGame):
 
 # ]
 
-names = ["layer1.json","layer2.json", "MultipleObJTest1.json"]
+#Test layers
+names = ["Game0/test_layer1.json","Game0/test_layer2.json", "Game1/MultipleObJTest1.json"]
+
 #names.remove("matrix.json")
 # if ".DS_Store" in names:
 #     names.remove(".DS_Store")
