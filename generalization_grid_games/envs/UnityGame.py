@@ -108,9 +108,34 @@ class UnityGame(PlayingXYZGeneralizationGridGame):
 
         #if token == UP_ARROW:
 
+    # @staticmethod
+    # def dictionary_creator():
+    #     returnfrom = dict()
+    #     returnfrom[P_Clicked] = P
+    #     returnfrom[P] = P_Clicked
+    #     returnfrom[S_CLicked] = S
+    #     returnfrom[S] = S_CLicked
+    #     returnfrom[CUBE_BLACK_Clicked] = CUBE_BLACK
+    #     returnfrom[CUBE_BLACK] = CUBE_BLACK_Clicked
+    #     returnfrom[CUBE_YELLOW_Clicked] = CUBE_YELLOW
+    #     returnfrom[CUBE_YELLOW] = CUBE_YELLOW_Clicked
+    #     returnfrom[CUBE_GREEN_Clicked] = CUBE_GREEN
+    #     returnfrom[CUBE_GREEN] = CUBE_GREEN_Clicked
+    #     returnfrom[CUBE_BROWN_Clicked] = CUBE_BROWN
+    #     returnfrom[CUBE_BROWN] = CUBE_BROWN_Clicked
+    #     returnfrom[CUBE_GREY_Clicked] = CUBE_GREY
+    #     returnfrom[CUBE_GREY] = CUBE_GREY_Clicked
+    #     returnfrom[CUBE_PINK_Clicked] = CUBE_PINK
+    #     returnfrom[CUBE_PINK] = CUBE_PINK_Clicked
+    #     returnfrom[CUBE_BLUE_Clicked] = CUBE_BLUE
+    #     returnfrom[CUBE_BLUE] = CUBE_BLUE_Clicked
+    #     return returnfrom
+    
     @staticmethod
     def dictionary_creator():
         returnfrom = dict()
+        #CURRENT_PICKED_STATE
+        returnfrom[Clicked] = None 
         returnfrom[P_Clicked] = P
         returnfrom[P] = P_Clicked
         returnfrom[S_CLicked] = S
@@ -131,17 +156,21 @@ class UnityGame(PlayingXYZGeneralizationGridGame):
         returnfrom[CUBE_BLUE] = CUBE_BLUE_Clicked
         return returnfrom
 
+
     def add(self,layout, r, c, pick_obj = None):
+        #If no object is currently picked if condition is true
         if isinstance(pick_obj, np.ndarray):
             token = layout[tuple(pick_obj)]
             layout[tuple(pick_obj)] = None
-            layout[r,c] = self.returnfrom[token] 
+            layout[r,c] = self.returnfrom[Clicked] 
+            self.returnfrom[Clicked] = None
         else:
             token = layout[r,c]
             if token == None:
                 return layout
-            new_token = self.returnfrom[token] 
-            layout[r,c] = new_token
+            self.returnfrom[Clicked] = token
+            assert(self.returnfrom[Clicked] != None)
+            layout[r,c] = Clicked
         return layout
 
     @staticmethod
